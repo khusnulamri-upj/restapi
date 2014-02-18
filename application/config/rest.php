@@ -22,7 +22,8 @@ $config['force_https'] = FALSE;
 |	Default: xml
 |
 */
-$config['rest_default_format'] = 'xml';
+$config['rest_default_format'] = 'json';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,8 @@ $config['enable_emulate_request'] = TRUE;
 |	E.g: My Secret REST API
 |
 */
-$config['rest_realm'] = 'REST API';
+//$config['rest_realm'] = 'REST API';
+$config['rest_realm'] = 'DATA CENTER API';
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +62,7 @@ $config['rest_realm'] = 'REST API';
 |
 */
 $config['rest_auth'] = false;
+//$config['rest_auth'] = 'basic';
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +74,8 @@ $config['rest_auth'] = false;
 | '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
 |
 */
-$config['auth_source'] = 'ldap';
+//$config['auth_source'] = 'ldap';
+$config['auth_source'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -227,7 +231,7 @@ $config['rest_keys_table'] = 'keys';
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = FALSE;
+$config['rest_enable_keys'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -263,7 +267,7 @@ $config['rest_key_length'] = 40;
 | Default: X-API-KEY
 |
 */
-$config['rest_key_name'] = 'X-API-KEY';
+$config['rest_key_name'] = 'DATA-CENTER-KEY';
 
 /*
 |--------------------------------------------------------------------------
@@ -302,7 +306,7 @@ $config['rest_logs_table'] = 'logs';
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_logging'] = FALSE;
+$config['rest_enable_logging'] = TRUE;
 
 
 /*
@@ -338,7 +342,7 @@ CREATE TABLE `access` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_access'] = FALSE;
+$config['rest_enable_access'] = TRUE;
 
 
 /*

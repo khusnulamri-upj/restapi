@@ -84,7 +84,8 @@ class Example extends REST_Controller
 
 	public function send_post()
 	{
-		var_dump($this->request->body);
+		//var_dump($this->request->body);
+                $this->response(array('error' => 'Couldn\'t find any users!'), 404);
 	}
 
 
