@@ -336,7 +336,7 @@ CREATE TABLE `access` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key` varchar(40) NOT NULL DEFAULT '',
   `controller` varchar(50) NOT NULL DEFAULT '',
-  `date_created` datetime DEFAULT NULL,
+  date_created` datetime DEFAULT NULL,
   `date_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

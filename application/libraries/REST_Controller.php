@@ -359,8 +359,8 @@ abstract class REST_Controller extends CI_Controller
 
 		// Use keys for this method?
 		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
-
-		// Get that useless shitty key out of here
+                
+                // Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
                         /**
@@ -370,15 +370,18 @@ abstract class REST_Controller extends CI_Controller
                         * --START--
                         */	
                         // Check to see if they can access the controller
-			//if (!$this->_check_access())
-                        if (!$this->_check_access($object_called))
+			/*if (!$this->_check_access())
+                        {*/
+                        if (!$this->_check_access($object_called)) {
+                            if (config_item('rest_enable_logging') AND $log_method) {
+                                $this->_log_request($authorized = 2);
+                            }
                         /**
                         * Diubah oleh          : khusnul
                         * Pada tanggal         : 18 Feb 2014
                         * Kasus yang terjadi   : - untuk controller yang berada dalam folder, tidak dicek access-nya, yang dicek folder-nya
                         * --END--
                         */	
-			{
 				$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
 			}
 
@@ -389,12 +392,30 @@ abstract class REST_Controller extends CI_Controller
 
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
 		}
-                print_r(config_item('rest_enable_keys'));
-                print_r($use_key);
-                print_r($this->_allow);
-                exit();
-
-		// Sure it exists, but can they do anything with it?
+                
+                /**
+                * Ditambah oleh        : khusnul
+                * Pada tanggal         : 19 Feb 2014
+                * Kasus yang terjadi   : - cek hak akses jika config enable & logging
+                * --START--
+                */	
+                if (config_item('rest_enable_access')) {
+                    if (!$this->_check_access($object_called)) {
+                        if (config_item('rest_enable_logging') AND $log_method) {
+                            $this->_log_request($authorized = 2);
+			}
+                        
+                        $this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
+                    }
+                }
+                /**
+                * Ditambah oleh        : khusnul
+                * Pada tanggal         : 19 Feb 2014
+                * Kasus yang terjadi   : - cek hak akses jika config enable & logging
+                * --END--
+                */	
+                
+                // Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
 		{
 			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
@@ -1567,6 +1588,17 @@ abstract class REST_Controller extends CI_Controller
 
 		return FALSE;
 	}*/
+        /*
+        CREATE TABLE `access` (
+            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `key` varchar(40) NOT NULL DEFAULT '',
+            `controller` varchar(50) NOT NULL DEFAULT '',
+            `method` varchar(50) NOT NULL DEFAULT '',
+            `date_created` datetime DEFAULT NULL,
+            `date_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+         */
         protected function _check_access($method_name = NULL) 
 	{
 		// if we don't want to check acccess, just return TRUE
@@ -1581,9 +1613,10 @@ abstract class REST_Controller extends CI_Controller
                     $controller = explode('/', $this->uri->uri_string());
                 }
                 
-		$this->rest->db->select();
+                $this->rest->db->select();
 		$this->rest->db->where('key', $this->rest->key);
 		$this->rest->db->where('controller', rtrim($controller[0],'/'));
+                $this->rest->db->where('method', $method_name);
 		
 		$query = $this->rest->db->get(config_item('rest_access_table'));
 
